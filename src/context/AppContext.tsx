@@ -156,6 +156,67 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedBlogSlug, setSelectedBlogSlug] = useState<string | null>('how-to-score-a-star-cambridge-physics-pakistan');
   const [activeClassroomId, setActiveClassroomId] = useState<string | null>(null);
 
+  // Sync URL Routing
+  useEffect(() => {
+    const isValidPage = (p: string): boolean => {
+      const validPages = [
+        'home', 'find-tutors', 'tutor-detail', 'student-dashboard', 
+        'tutor-dashboard', 'admin-dashboard', 'live-classroom', 
+        'blog', 'blog-detail', 'pricing', 'about', 'contact', 
+        'faq', 'help', 'privacy', 'terms', 'db-schema'
+      ];
+      return validPages.includes(p);
+    };
+
+    const syncRouteFromUrl = () => {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+
+      // 1. Check hash first
+      if (hash.startsWith('#/')) {
+        const page = hash.replace('#/', '');
+        if (isValidPage(page)) {
+          setCurrentPage(page as AppPage);
+          return;
+        }
+      } else if (hash.replace('#', '') && isValidPage(hash.replace('#', ''))) {
+        setCurrentPage(hash.replace('#', '') as AppPage);
+        return;
+      }
+
+      // 2. Check pathname
+      const segments = path.split('/').filter(Boolean);
+      const lastSegment = segments[segments.length - 1];
+      if (lastSegment && isValidPage(lastSegment)) {
+        setCurrentPage(lastSegment as AppPage);
+      }
+    };
+
+    syncRouteFromUrl();
+    window.addEventListener('popstate', syncRouteFromUrl);
+    window.addEventListener('hashchange', syncRouteFromUrl);
+
+    return () => {
+      window.removeEventListener('popstate', syncRouteFromUrl);
+      window.removeEventListener('hashchange', syncRouteFromUrl);
+    };
+  }, []);
+
+  useEffect(() => {
+    const pagePath = currentPage === 'home' ? '' : currentPage;
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    const repoFolder = isGitHubPages ? '/TutorHub' : '';
+    const targetPath = `${repoFolder}/${pagePath}`;
+    const targetHash = pagePath ? `#/${pagePath}` : '';
+
+    const currentPathClean = window.location.pathname.replace(/\/$/, '');
+    const cleanTargetPath = targetPath.replace(/\/$/, '');
+
+    if (currentPathClean !== cleanTargetPath || window.location.hash !== targetHash) {
+      window.history.pushState({ page: currentPage }, '', targetPath + targetHash);
+    }
+  }, [currentPage]);
+
   // Auth & Roles
   const [activeRole, setActiveRole] = useState<UserRole | 'guest'>('student');
   const [currentUser, setCurrentUser] = useState<User | StudentProfile | TutorProfile | null>(INITIAL_STUDENTS[0]);

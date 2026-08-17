@@ -25,16 +25,19 @@ export const StudentDashboard: React.FC = () => {
     currentUser,
     bookings,
     tutors,
-    favoriteTutors,
     studyMaterials,
     assignments,
-    submitAssignment,
+    submitHomework,
     requestRefund,
     setCurrentPage,
     setActiveClassroomId,
     openBookingForTutor,
-    updateCurrentUserProfile
+    updateStudentProfile
   } = useApp();
+
+  const favoriteTutors = (currentUser?.role === 'student' ? (currentUser as any).favoriteTutorIds : []) || [];
+  const submitAssignment = submitHomework;
+  const updateCurrentUserProfile = updateStudentProfile;
 
   const [activeTab, setActiveTab] = useState<
     'classes' | 'assignments' | 'materials' | 'favorites' | 'payments' | 'settings'

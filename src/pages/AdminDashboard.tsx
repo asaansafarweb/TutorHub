@@ -148,7 +148,7 @@ export const AdminDashboard: React.FC = () => {
                       </div>
 
                       <p className="text-xs text-slate-500 mt-0.5">
-                        {tutor.city} • Rate: Rs. {tutor.hourlyRatePKR.toLocaleString()}/hr • {tutor.education[0]?.degree} ({tutor.education[0]?.institution})
+                        {tutor.city} • Rate: Rs. {tutor.hourlyRatePKR.toLocaleString()}/hr • {tutor.verification?.degreeTitle || tutor.qualification} ({tutor.verification?.degreeInstitute || 'Verified Institution'})
                       </p>
                       <p className="text-[11px] text-slate-400 font-mono mt-0.5">
                         CNIC: {tutor.cnicNumber || '35202-*******-1'} | Mobile: {tutor.phone}
@@ -161,7 +161,7 @@ export const AdminDashboard: React.FC = () => {
                       <>
                         <button
                           onClick={() => {
-                            verifyTutor(tutor.id, true);
+                            verifyTutor(tutor.id, 'verified');
                             alert(`Approved CNIC & degrees for ${tutor.name}!`);
                           }}
                           className="flex-1 md:flex-none px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm"
@@ -172,7 +172,7 @@ export const AdminDashboard: React.FC = () => {
 
                         <button
                           onClick={() => {
-                            verifyTutor(tutor.id, false);
+                            verifyTutor(tutor.id, 'rejected');
                             alert(`Rejected application for ${tutor.name}.`);
                           }}
                           className="flex-1 md:flex-none px-4 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold text-xs"
@@ -183,7 +183,7 @@ export const AdminDashboard: React.FC = () => {
                     ) : (
                       <button
                         onClick={() => {
-                          verifyTutor(tutor.id, false);
+                          verifyTutor(tutor.id, 'rejected');
                         }}
                         className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-100"
                       >

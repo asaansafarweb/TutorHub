@@ -25,12 +25,15 @@ export const TutorDashboard: React.FC = () => {
     bookings,
     tutors,
     assignments,
-    addAssignment,
+    createAssignment,
     studyMaterials,
-    addStudyMaterial,
+    uploadStudyMaterial,
     setCurrentPage,
     setActiveClassroomId
   } = useApp();
+
+  const addAssignment = createAssignment;
+  const addStudyMaterial = uploadStudyMaterial;
 
   const currentTutor = tutors.find(t => t.email === currentUser?.email) || tutors[0];
 
