@@ -1,0 +1,6 @@
+{
+  "name": "TutorHub Pakistan",
+  "description": "Pakistan's premier tutoring and online education marketplace connecting students with verified tutors across school, college, language, and professional skill subjects with online classrooms, scheduling, and Pakistani payment options.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
